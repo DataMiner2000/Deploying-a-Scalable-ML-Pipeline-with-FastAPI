@@ -1,28 +1,39 @@
 import pytest
-# TODO: add necessary import
+import pandas as pd
+import numpy as np
+from ml.model import train_model, compute_model_metrics
+from sklearn.linear_model import LogisticRegression
 
-# TODO: implement the first test. Change the function name and input as needed
-def test_one():
-    """
-    # add description for the first test
-    """
-    # Your code here
-    pass
+# Add some sample data for testing purposes
+sample_data = pd.DataFrame({
+    '1': [1, 2, 5],
+    '2': [0, 1, 3],
+    '3': [0, 1, 2]
+})
 
+def test_model_iterations_num():
+    """
+    Ensures that our model iterates the specified number of times.
+    """
+    X = np.array([[0], [1]])
+    y = np.array([0, 1])
+    model = train_model(X, y)
+    assert model.max_iter == 500
 
-# TODO: implement the second test. Change the function name and input as needed
-def test_two():
+def test_model_classifier_correct():
     """
-    # add description for the second test
+    Tests that our model type (Logistic Regression) is being selected and run successfully.
     """
-    # Your code here
-    pass
+    X = sample_data[['1', '2']]
+    y = sample_data['3']
+    model = train_model(X, y)
+    assert isinstance(model, LogisticRegression)
 
-
-# TODO: implement the third test. Change the function name and input as needed
-def test_three():
+def test_model_metrics():
     """
-    # add description for the third test
+    Tests to make sure that model metrics are being computed correctly and are floats.
     """
-    # Your code here
-    pass
+    y1 = [0, 1, 0, 1]
+    y2 = [0, 1, 1, 1]
+    precision, recall, fbeta = compute_model_metrics(y1, y2)
+    assert all(isinstance(m, float) for m in [precision, recall, fbeta])
